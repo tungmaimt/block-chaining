@@ -3,15 +3,14 @@ import hashlib
 import unicodedata
 
 class Block:
-    global __gen_id
     def __init__(self, message, pre):
         has = hashlib.md5()
         self.message = message
         self.created_time = int(time.time()) 
         self.pre = pre
-        has.update(unicodedata.normalize('NFKD', str(message)).encode())
-        has.update(unicodedata.normalize('NFKD', str(self.created_time)).encode())
-        has.update(unicodedata.normalize('NFKD', str(pre)).encode())
+        has.update(message.encode())
+        has.update(str(self.created_time).encode())
+        has.update(str(pre).encode())
         self.id = has.hexdigest()
     
     def view(self):
@@ -22,9 +21,9 @@ class Block:
     
     def verify(self):
         has = hashlib.md5()
-        has.update(unicodedata.normalize('NFKD', str(self.message)).encode())
-        has.update(unicodedata.normalize('NFKD', str(self.created_time)).encode())
-        has.update(unicodedata.normalize('NFKD', str(self.pre)).encode())
+        has.update(self.message.encode())
+        has.update(str(self.created_time).encode())
+        has.update(str(self.pre).encode())
         if has.hexdigest() == self.id:
             return True
         else:
